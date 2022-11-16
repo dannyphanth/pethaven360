@@ -1,0 +1,87 @@
+.Wrapper {
+    margin: 0;
+    padding: 0;
+    min-height: 6vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 99.3%;
+    border-bottom: 1px;
+    background-color: white;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+}
+
+.container {
+    margin: 0;
+    background-color: #bec0c4;
+    height: 50px;
+    width: 100%;
+}
+.container ul{
+    display: flex;
+    flex-direction: row;
+    font-size: 20px;
+    justify-content: space-between;
+    list-style-type: none;
+    width: 90%;
+}
+
+.logo {
+    padding: 0.25em 1em;
+    text-decoration: none; /* no underline */
+    background-color: white;
+    color: black;
+}
+
+.NavBar {
+    display: flex;
+    flex-direction: row;
+    font-size: 20px;
+    justify-content: space-between;
+    list-style-type: none;
+    width: 90%;
+    height: 100%;
+    transition: all .7s ease-in;
+    list-style-type: none;
+}
+
+.NavBar-Link{
+    padding: 0.25em 1em;
+    text-decoration: none; /* no underline */
+    background-color: white;
+    color: black;
+    border: 2px solid lightblue;
+    border-top-left-radius: 1em 1em; 
+    border-top-right-radius: 1em 1em; 
+    border-bottom-left-radius: 1em 1em;
+    border-bottom-right-radius: 1em 1em;
+}
+
+.NavBar-Link:hover, .NavBar-Link:focus{
+    color: white;
+    background-color: lightblue;
+    font-weight: bold;
+}  
+
+
+
+.active-link {
+    color: lightskyblue
+}
+/* IMPORTANT */
+.scrolled {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: lightblue;
+}
+
+.logo img{
+    width: 50px;
+}

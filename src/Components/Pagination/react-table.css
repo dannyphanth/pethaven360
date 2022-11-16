@@ -1,0 +1,259 @@
+div#global-filter-container {
+    display: flex;
+    align-items: center;
+}
+
+div.column-filter > input {
+    display: flex;
+    justify-content: center;
+}
+
+div#global-filter-container > div > button,
+button.resize-reset {
+    background-color: #7680f5;
+    border-radius: 5px;
+    justify-self: flex-end;
+    box-shadow: 2px 2px 3px lightgray;
+    text-decoration: none;
+}
+
+
+table {
+    box-shadow: 1px 1px 2px gray;
+}
+
+table > tbody > tr:nth-child(even){
+    background-color: rgb(241, 241, 241);
+}
+
+/* Align header items to be center */
+thead > tr > th {
+    text-align: center;
+    /* min-width: 120px; */
+}
+
+/* General search selector width is increased
+    There needs to be a way to allow the search to be visible while scrollingX
+*/
+tr > th > span > input {
+    width: 20%;
+}
+
+/* Provides styling for react-table inputs */
+thead > tr > th > div > input,
+thead > tr > th > div > div > input,
+tr > th > span > input,
+th > div > select {
+    border: 1px solid lightgray !important;
+    box-shadow: 1px 1px gray;
+    border-radius: 5px;
+    background-color: #f1f3fa;
+    min-width: 80px;
+    width: 100%;
+    /* max-height: 55px; */
+}
+
+div.pagination {
+    margin: 5px;
+}
+
+div.pagination > button:disabled {
+    /* margin: 0px 0px 0px 5px; */
+    border: 1px solid gray;
+    border-radius: 3px;
+    margin: 0px 1px;
+}
+div.pagination > button:enabled {
+    /* margin: 0px 0px 0px 5px; */
+    border: 1px solid gray;
+    background-color: #1976d2;
+    color: white;
+    border-radius: 3px;
+    margin: 0px 1px;
+}
+
+.page,
+.page-index,
+.page-select,
+.page-info {
+    display: flex;
+    align-items: center;
+}
+
+.page-select {
+    border: 1px solid lightgray;
+    box-shadow: 1px 1px gray;
+    border-radius: 5px;
+}
+
+span.page {
+    margin: 2px;
+}
+
+span.page > strong,
+span.page-index > input,
+span.page-info {
+    margin-left: 5px;
+    margin-right: 2px;
+}
+
+span.page-index > input {
+    border: 1px solid lightgray;
+    border-radius: 15px;
+    text-align: center;
+    width: 50px;
+}
+
+/* Applies to the top header only */
+thead > tr.header-group.filter:first-child > th {
+    min-height: 115px;
+}
+thead > tr.header-group:first-child > th,
+thead > tr.header-group.filter:first-child > th
+ {
+    /* display: grid;
+    align-items: center; 
+    justify-content: center; */
+    background-color: #1976d2 !important;
+    color: white;
+    border-left: none;
+    position: sticky;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-right: 0px;
+    border-bottom: 0px
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+div.column-filter > input {
+    min-width: 100px;
+}
+
+/* Center Placeholder Text of Column Filters */
+div.column-filter > input::-webkit-input-placeholder, 
+div.column-filter > select::-webkit-input-placeholder {
+    text-align: center !important;
+ }
+ 
+div.column-filter > input:-moz-placeholder, 
+div.column-filter > select:-moz-placeholder { /* Firefox 18- */
+    text-align: center !important;  
+ }
+ 
+div.column-filter > input::-moz-placeholder, 
+div.column-filter > select::-moz-placeholder {  /* Firefox 19+ */
+    text-align: center !important;  
+ }
+ 
+div.column-filter > input:-ms-input-placeholder, 
+div.column-filter > select:-ms-input-placeholder {  
+    text-align: center !important; 
+ }
+
+div.css-2b097c-container,  div.css-5duvv3-control {
+     min-width: 200px;
+     max-height: 44px;
+     align-content: center;
+ }
+
+ /* Attempted styles to get the Selector to overflow the table */
+div.css-2613qy-menu {
+    position: fixed;
+    z-index: 1005;
+    overflow: visible;
+}
+
+table {
+    border: none !important;
+}
+
+table > thead {
+    background-color: #1976d2;
+}
+
+.rt-tbody {
+    overflow: visible !important;
+}
+
+thead.sticky {
+    position: sticky !important;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+    /* width: 125px !important; */
+}
+
+td.sticky {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    position: sticky !important;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    background-color: white;
+    /* width: 125px !important; */
+}
+
+tr.sticky {
+    position: sticky !important;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+    border: 0px solid #1976d2;
+}
+
+th.stickiest,
+td.stickiest {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    position: sticky !important;
+    left: 0;
+    top: 0;
+    z-index: 15;
+    background-color: white;
+    border: 0px solid #1976d2;
+    border-width: 95%;
+}
+
+/* td.stickiest {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    position: sticky !important;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    background-color: white;
+    border: 0px solid #1976d2;
+    border-width: 95%;
+    width: 125px;
+} */
+
+.hidden {
+    display: 'none';
+    width: '0px';
+};
