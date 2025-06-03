@@ -2,12 +2,6 @@
   "name": "pethaven360",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
   "dependencies": {
     "@availity/reactstrap-validation-select": "^9.2.2",
     "@material-ui/core": "^4.12.3",
@@ -19,28 +13,24 @@
     "bootstrap": "^5.1.3",
     "chart.js": "^4.4.9",
     "dotenv": "^16.5.0",
-    "next": "^14.1.0",
-    "react": "^18.2.0",
+    "react": "^17.0.2",
     "react-bootstrap": "^2.0.2",
     "react-bootstrap-icons": "^1.6.1",
     "react-chartjs-2": "^5.3.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.1",
+    "react-scripts": "4.0.3",
     "react-select": "^5.2.1",
     "react-table": "^7.7.0",
     "reactstrap": "^9.0.1",
     "styled-components": "^5.3.3",
     "web-vitals": "^1.1.2"
   },
-  "devDependencies": {
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.1.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "browserslist": {
     "production": [

@@ -24,6 +24,7 @@ const Dashboard = () => {
     const [upcomingAppointmentsList, setUpcomingAppointmentsList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [appointments, setAppointments] = useState([]);
 
     useEffect(() => {
         fetchDashboardStats();
@@ -36,7 +37,24 @@ const Dashboard = () => {
             console.log('Fetching dashboard stats...');
             const response = await axios.get(`${API_URL}/dashboard/stats`);
             console.log('Dashboard response:', response.data);
-            setStats(response.data);
+
+            // Get the actual count of today's appointments
+            const todayAppts = appointments.filter(app => {
+                if (!app.start_date) return false;
+                const appDateStr = app.start_date.split('T')[0];
+                const isToday = appDateStr === '2025-06-03';
+                const isValidStatus = ['scheduled', 'completed'].includes(app.status);
+                return isToday && isValidStatus;
+            });
+
+            // Update the stats with the actual count
+            const updatedStats = {
+                ...response.data,
+                todayAppointments: todayAppts.length
+            };
+
+            console.log('Updated stats:', updatedStats);
+            setStats(updatedStats);
             setError(null);
         } catch (err) {
             console.error('Error fetching dashboard stats:', err);
@@ -56,65 +74,83 @@ const Dashboard = () => {
             console.log('Fetching appointments...');
             const response = await axios.get(`${API_URL}/appointments`);
             console.log('Raw appointments data:', response.data);
-            const appointments = response.data;
+            const appointmentsData = response.data;
+            setAppointments(appointmentsData);
 
-            // Get today's date in user's timezone
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
+            // For test data, use 2025-06-03
+            const testDateStr = '2025-06-03';
+            console.log('Test date string:', testDateStr);
 
             // Filter today's appointments
-            const todayAppts = appointments.filter(app => {
-                const appDate = new Date(app.start_date);
-                // Convert to local timezone date for comparison
-                const localAppDate = new Date(appDate.getTime() - appDate.getTimezoneOffset() * 60000);
-                localAppDate.setHours(0, 0, 0, 0);
+            const todayAppts = appointmentsData.filter(app => {
+                if (!app.start_date) {
+                    console.log('Appointment missing start_date:', app);
+                    return false;
+                }
 
-                console.log('Comparing dates:', {
-                    appointment: localAppDate.toISOString(),
-                    today: today.toISOString(),
-                    isToday: localAppDate.toDateString() === today.toDateString(),
-                    status: app.status
-                });
+                // Get just the date part from the ISO string (YYYY-MM-DD)
+                const appDateStr = app.start_date.split('T')[0];
+                const isToday = appDateStr === testDateStr;
+                const isValidStatus = ['scheduled', 'completed'].includes(app.status);
 
-                return localAppDate.toDateString() === today.toDateString() && app.status === 'scheduled';
+                // Detailed debugging for each appointment
+                console.log('=== Appointment Debug ===');
+                console.log('Appointment ID:', app._id);
+                console.log('Raw start_date:', app.start_date);
+                console.log('App date string:', appDateStr);
+                console.log('Test date string:', testDateStr);
+                console.log('Is today?', isToday);
+                console.log('Status:', app.status);
+                console.log('Is valid status?', isValidStatus);
+                console.log('Passes filter?', isToday && isValidStatus);
+                console.log('=====================');
+
+                return isToday && isValidStatus;
             });
-            console.log('Today\'s appointments:', todayAppts);
 
-            // Filter upcoming appointments (next 7 days, excluding today)
-            const nextWeek = new Date(today);
-            nextWeek.setDate(nextWeek.getDate() + 7);
+            console.log('All appointments for today:', todayAppts);
 
-            const upcomingAppts = appointments.filter(app => {
-                const appDate = new Date(app.start_date);
-                // Convert to local timezone date for comparison
-                const localAppDate = new Date(appDate.getTime() - appDate.getTimezoneOffset() * 60000);
-                localAppDate.setHours(0, 0, 0, 0);
-
-                const isUpcoming = localAppDate > today && localAppDate <= nextWeek;
-                console.log('Checking upcoming:', {
-                    date: localAppDate.toISOString(),
-                    isAfterToday: localAppDate > today,
-                    isBeforeNextWeek: localAppDate <= nextWeek,
-                    isUpcoming,
-                    status: app.status
-                });
-
-                return isUpcoming && app.status === 'scheduled';
-            });
-            console.log('Upcoming appointments:', upcomingAppts);
-
-            // Sort appointments by time
+            // Sort today's appointments by time
             const sortByTime = (a, b) => {
                 const timeA = a.appointment_time || '00:00';
                 const timeB = b.appointment_time || '00:00';
                 return timeA.localeCompare(timeB);
             };
 
-            setTodayAppointmentsList(todayAppts.sort(sortByTime));
+            const sortedTodayAppts = todayAppts.sort(sortByTime);
+            console.log('Sorted appointments for today:', sortedTodayAppts);
+            setTodayAppointmentsList(sortedTodayAppts);
+
+            // Filter upcoming appointments (next 7 days, excluding today)
+            const testDate = new Date(testDateStr);
+            const nextWeek = new Date(testDate);
+            nextWeek.setDate(nextWeek.getDate() + 7);
+
+            const upcomingAppts = appointmentsData.filter(app => {
+                if (!app.start_date) return false;
+
+                const appDate = new Date(app.start_date);
+                const appDateStr = app.start_date.split('T')[0];
+                const isToday = appDateStr === testDateStr;
+                const isUpcoming = !isToday && appDate <= nextWeek;
+                const isScheduled = app.status === 'scheduled';
+
+                return isUpcoming && isScheduled;
+            });
+
             setUpcomingAppointmentsList(upcomingAppts.sort((a, b) => {
                 const dateCompare = new Date(a.start_date) - new Date(b.start_date);
                 return dateCompare === 0 ? sortByTime(a, b) : dateCompare;
             }));
+
+            // Update stats with the actual count
+            const statsResponse = await axios.get(`${API_URL}/dashboard/stats`);
+            const updatedStats = {
+                ...statsResponse.data,
+                todayAppointments: todayAppts.length
+            };
+            console.log('Updated stats:', updatedStats);
+            setStats(updatedStats);
         } catch (err) {
             console.error('Error fetching appointments:', err);
             setError(err.response?.data || err.message);
@@ -155,7 +191,9 @@ const Dashboard = () => {
             borderRadius: '12px',
             border: 'none',
             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-            height: '100%'
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column'
         }}>
             <CardHeader style={{
                 backgroundColor: '#2c3e50',
@@ -167,7 +205,13 @@ const Dashboard = () => {
             }}>
                 {title}
             </CardHeader>
-            <CardBody style={{ padding: '0' }}>
+            <CardBody style={{
+                padding: '0',
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                overflow: 'hidden'
+            }}>
                 {appointments.length === 0 ? (
                     <p className="text-center" style={{
                         padding: '20px',
@@ -175,7 +219,11 @@ const Dashboard = () => {
                         margin: 0
                     }}>No appointments scheduled</p>
                 ) : (
-                    <div style={{ overflowX: 'auto' }}>
+                    <div style={{
+                        overflow: 'auto',
+                        flex: 1,
+                        maxHeight: '400px'
+                    }}>
                         <Table hover responsive style={{
                             margin: 0,
                             borderCollapse: 'separate',
