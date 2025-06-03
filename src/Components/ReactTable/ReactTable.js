@@ -14,20 +14,21 @@ import {
 
 // Components
 import { InputAdornment, TextField } from '@material-ui/core';
-import { 
+import {
     // Button, 
-    Col, 
-    Row } from 'reactstrap';
+    Col,
+    Row
+} from 'reactstrap';
 import { Pagination } from '../../Components/Pagination';
 // import OptionsOutsideSelect from '../../tables/table-tools/Filters/Selectors/OptionsOutsideSelect';
 // import Spinner from '../../../components/Spinner';
 
 // Icons
-import { 
+import {
     // CaretDown, 
     // CaretUp, 
     // CaretRight, 
-    Search, 
+    Search,
     // XSquareFill, 
     // ArrowLeftRight 
 } from 'react-bootstrap-icons';
@@ -35,7 +36,7 @@ import {
 // Utilities
 // import { matchSorter } from 'match-sorter';
 import { numberFormatter } from './numberFormatter';
-import { 
+import {
     // makeStyles, 
     // Tooltip 
 } from '@material-ui/core';
@@ -60,49 +61,69 @@ const Styles = styled.div`
     table {
         width: 100%;
         border-spacing: 0;
-        border-spacing: 0;
-        border: 1px solid lightgray;
+        border: none;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        table-layout: fixed;
+        
         tr {
             :last-child {
                 td {
                     border-bottom: 0;
                 }
             }
-            max-height: 45px;
-            width: 100%;
-        }
-        th {
-            min-height: 55px;
-        }
-        td {
-            white-space: no-wrap;
-        }
-        th,
-        td {
-            margin: 0;
-            padding: 1rem;
-            border-bottom: 1px solid black;
-            border-right: 1px solid black;
-
-            :last-child {
-                border-right: 0;
+            :hover {
+                background-color: #f8f9fa;
             }
         }
+        
+        th {
+            background-color: #2c3e50;
+            color: white;
+            font-weight: 500;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 0.85rem;
+            letter-spacing: 0.3px;
+            border: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #eee;
+            color: #2c3e50;
+            font-size: 0.85rem;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
+            max-width: 100%;
+            line-height: 1.4;
+        }
+
+        td:first-child {
+            white-space: nowrap;
+            width: 150px;
+        }
+        
         .resizer {
             display: inline-block;
-            background: gray;
-            width: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 2px;
             height: 100%;
             position: absolute;
             right: 0;
             top: 0;
             transform: translateX(50%);
             z-index: 1;
-            ${'' /* prevents from scrolling while dragging on touch devices */}
-            touch-action:none;
-
+            touch-action: none;
+            
             &.isResizing {
-                background: black;
+                background: #2c3e50;
             }
         }
     }
@@ -314,21 +335,28 @@ const ReactTable = ({
         overflowX: 'auto',
         overflowY: 'auto',
         margin: '8px',
-        boxShadow: '2px 2px 2px 1px gray',
-        borderRadius: '5px',
-        whiteSpace: 'nowrap',
+        borderRadius: '8px',
         backgroundColor: 'white',
         maxHeight: maxHeight,
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
     };
 
     return (
         <>
             <Row id="global-filter-container">
-                <Row style={{ marginLeft: '.02rem'}}>
+                <Row style={{ marginLeft: '.02rem' }}>
                     <Col xl={10}>
                         <select
-                            className="page-select"
-                            style={{ marginRight: '1vw', marginTop: '.5vw' , width: '7rem'}}
+                            className="page-select form-select"
+                            style={{
+                                marginRight: '1vw',
+                                marginTop: '.5vw',
+                                width: '7rem',
+                                borderRadius: '6px',
+                                border: '1px solid #ddd',
+                                padding: '8px',
+                                fontSize: '0.9rem'
+                            }}
                             value={pageSize}
                             onChange={(e) => {
                                 setPageSize(Number(e.target.value));
@@ -357,16 +385,16 @@ const ReactTable = ({
                         {headerGroups.map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map((column, i) => {
-                                        return (
-                                            <th {...column.getHeaderProps()}>{
-                                                column.render('Header')}
-                                                {/* {console.log('Header', typeof column.Header, column.Header)} */}
-                                                {/* <div className='column-filter'>
+                                    return (
+                                        <th {...column.getHeaderProps()}>{
+                                            column.render('Header')}
+                                            {/* {console.log('Header', typeof column.Header, column.Header)} */}
+                                            {/* <div className='column-filter'>
                                                     {typeof column.Header === 'string' && column.Header !== 'Action' ? column.render('Filter'): <></>}
                                                 </div> */}
-                                            </th>);
+                                        </th>);
                                 }
-                            )}
+                                )}
                             </tr>
                         ))}
                     </thead>

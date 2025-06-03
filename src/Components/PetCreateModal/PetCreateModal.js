@@ -16,11 +16,11 @@ import {
 import Select from 'react-select'
 import axios from 'axios'
 import {
-    AvForm, 
-    AvField, 
-    AvGroup, 
-    AvInput, 
-    AvFeedback, 
+    AvForm,
+    AvField,
+    AvGroup,
+    AvInput,
+    AvFeedback,
     // AvRadioGroup, 
     // AvRadio, 
     // AvCheckboxGroup, 
@@ -34,60 +34,59 @@ function PetCreateModal(props) {
     const [gender, setGender] = useState("");
     const [allergies, setAllergies] = useState("");
     const [medicalCondition, setMedicalCondition] = useState("");
-    
+
     const [client_id, setClient_id] = useState({
         value: "",
         label: "Required",
-        
+
     });
     const [clientOptions, setClientOptions] = useState([{}]);
-   
+
 
     useEffect(() => {
-        if(props.isCreateOpen === true){
+        if (props.isCreateOpen === true) {
             setPetName("");
-            // setClient_id("");
             setBreed("");
             setAge("");
             setGender("");
             setAllergies("");
-            setMedicalCondition("")
-
-            setClientOptions(getClientsData());
+            setMedicalCondition("");
+            setClient_id({
+                value: "",
+                label: "Required"
+            });
+            getClientsData();
         }
     }, [props.isCreateOpen]);
 
     const getClientsData = () => {
-        let clients = [{
-            value: "",
-            label: "Required",
-        }];
         axios
-        .get("http://localhost:5000/clients/")
-        .then((response) => {
-            console.log("response: ", response.data);
-            var clients_list = response.data;
-            
-            for (var i in clients_list){
-                var clientOption = {
-                    value: clients_list[i]['_id'],
-                    label: clients_list[i]['first_name'],
-                } 
-                clients.push(clientOption);
-            }
-            console.log(clients);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-        return clients;
+            .get("http://localhost:5000/clients/")
+            .then((response) => {
+                console.log("response: ", response.data);
+                var clients_list = response.data;
+                let clients = [{
+                    value: "",
+                    label: "Required",
+                }];
+                for (var i in clients_list) {
+                    var clientOption = {
+                        value: clients_list[i]['_id'],
+                        label: clients_list[i]['first_name'] + ' ' + clients_list[i]['last_name'],
+                    }
+                    clients.push(clientOption);
+                }
+                setClientOptions(clients);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
-  
+
 
     const clear = () => {
         setPetName("");
-        // setClient_id("");
         setBreed("");
         setAge("");
         setGender("");
@@ -102,34 +101,45 @@ function PetCreateModal(props) {
 
     const handleSubmit = (event, errors, value) => {
         console.log("errors: ", errors)
-        if (errors.length === 0){
+        if (errors.length === 0) {
             console.log("passed validation")
             var today = new Date(), day, month;
-            if (today.getDate() <= 9){
+            if (today.getDate() <= 9) {
                 console.log(today.getDate)
                 day = "0" + today.getDate();
-            } else{
+            } else {
                 day = today.getDate();
             }
-           
-            if (today.getMonth() <= 9){
+
+            if (today.getMonth() <= 9) {
                 console.log(today.getDate)
                 month = "0" + (today.getMonth() + 1);
-            } else{
+            } else {
                 month = today.getMonth() + 1;
             }
 
             var date = today.getFullYear() + '-' + (month) + '-' + day;
             console.log("Current Date: ", date)
-            value['joined_date'] = date;
-            value['status'] = 'active';
-            console.log("value: ", value);
-            props.create(value);
+
+            const petData = {
+                client_id: client_id.value,
+                pet_name: petName,
+                breed: breed,
+                age: age,
+                gender: gender,
+                allergies: allergies || '',
+                medical_condition: medicalCondition || '',
+                joined_date: date,
+                status: 'active'
+            };
+
+            console.log("Submitting pet data:", petData);
+            props.create(petData);
         }
     }
 
     return (
-        <Modal isOpen={props.isCreateOpen} size={'xl'} backdrop={'static'} style={{overflow:'hidden'}} centered={true} keyboard={false}>
+        <Modal isOpen={props.isCreateOpen} size={'xl'} backdrop={'static'} style={{ overflow: 'hidden' }} centered={true} keyboard={false}>
             <ModalHeader className='bg-primary text-white'>
                 Add New Pet
             </ModalHeader>
@@ -137,34 +147,33 @@ function PetCreateModal(props) {
                 <AvForm className='p-4' onSubmit={handleSubmit}>
                     <Row>
                         <Col>
-                        <AvGroup>
+                            <AvGroup>
                                 <Label for="client_id">
-                                Client
+                                    Client
                                 </Label>
                                 <Select
                                     value={client_id}
-                                    onChange={( value ) => { 
-                                        setClientOptions(value);
-                                        }
-                                    }
+                                    onChange={(value) => {
+                                        setClient_id(value);
+                                    }}
                                     name="client_id"
                                     options={clientOptions}
                                     required
                                 />
                                 <AvFeedback>Field is Required!</AvFeedback>
                             </AvGroup>
-                                </Col>
-                            </Row>
-                            <Row>
-                            <Col>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
                             <AvGroup>
                                 <Label for="pet_name">
-                                Pet Name
+                                    Pet Name
                                 </Label>
-                                <AvInput 
+                                <AvInput
                                     id="pet_name"
                                     value={petName}
-                                    onChange={( event ) => setPetName(event.target.value)}
+                                    onChange={(event) => setPetName(event.target.value)}
                                     name="pet_name"
                                     placeholder="Required"
                                     type="text"
@@ -172,24 +181,35 @@ function PetCreateModal(props) {
                                 />
                                 <AvFeedback>Field is Required!</AvFeedback>
                             </AvGroup>
-                    </Col>
+                        </Col>
                         <Col>
                             <AvGroup>
-                                <AvField id="breed" name="breed" label="Breed" type="email" placeholder="Required" value={breed} onChange={( event ) => setBreed(event.target.value)} required />
+                                <Label for="breed">
+                                    Breed
+                                </Label>
+                                <AvInput
+                                    id="breed"
+                                    name="breed"
+                                    value={breed}
+                                    onChange={(event) => setBreed(event.target.value)}
+                                    placeholder="Required"
+                                    type="text"
+                                    required
+                                />
                                 <AvFeedback>Field is Required!</AvFeedback>
                             </AvGroup>
                         </Col>
-                        </Row>
+                    </Row>
                     <Row>
                         <Col>
                             <AvGroup>
                                 <Label for="age">
-                                Age
+                                    Age
                                 </Label>
-                                <AvInput 
+                                <AvInput
                                     id="age"
                                     value={age}
-                                    onChange={( event ) => setAge(event.target.value)}
+                                    onChange={(event) => setAge(event.target.value)}
                                     name="age"
                                     placeholder="Required"
                                     type="text"
@@ -201,12 +221,12 @@ function PetCreateModal(props) {
                         <Col>
                             <AvGroup>
                                 <Label for="gender">
-                                Gender
+                                    Gender
                                 </Label>
-                                <AvInput 
+                                <AvInput
                                     id="gender"
                                     value={gender}
-                                    onChange={( event ) => setGender(event.target.value)}
+                                    onChange={(event) => setGender(event.target.value)}
                                     name="gender"
                                     placeholder="Required"
                                     type="text"
@@ -220,12 +240,12 @@ function PetCreateModal(props) {
                         <Col>
                             <AvGroup>
                                 <Label for="allergies">
-                                Allergies
+                                    Allergies
                                 </Label>
-                                <AvInput 
+                                <AvInput
                                     id="allergies"
                                     value={allergies}
-                                    onChange={( event ) => setAllergies(event.target.value)}
+                                    onChange={(event) => setAllergies(event.target.value)}
                                     name="allergies"
                                     placeholder="Optional"
                                     type="text"
@@ -235,12 +255,12 @@ function PetCreateModal(props) {
                         <Col>
                             <AvGroup>
                                 <Label for="medical_condition">
-                                Medical Condition
+                                    Medical Condition
                                 </Label>
-                                <AvInput 
+                                <AvInput
                                     id="medical_condition"
                                     value={medicalCondition}
-                                    onChange={( event ) => setMedicalCondition(event.target.value)}
+                                    onChange={(event) => setMedicalCondition(event.target.value)}
                                     name="medical_condition"
                                     placeholder="Optional"
                                     type="text"
@@ -248,7 +268,7 @@ function PetCreateModal(props) {
                             </AvGroup>
                         </Col>
                     </Row>
-                   
+
                     <FormGroup className='d-flex flex-row justify-content-center mt-4'>
                         <Button className="border-primary bg-primary text-white">Submit</Button>
                     </FormGroup>
@@ -256,12 +276,12 @@ function PetCreateModal(props) {
             </ModalBody>
             <ModalFooter>
                 <div className='w-100 d-flex flex-row justify-content-around'>
-                    <Button 
-                    onClick={() => { 
-                        clear();
-                        props.close()
-                    }} 
-                    className="btn btn-warning text-white"
+                    <Button
+                        onClick={() => {
+                            clear();
+                            props.close()
+                        }}
+                        className="btn btn-warning text-white"
                     >
                         Close
                     </Button>

@@ -3,12 +3,12 @@ div#global-filter-container {
     align-items: center;
 }
 
-div.column-filter > input {
+div.column-filter>input {
     display: flex;
     justify-content: center;
 }
 
-div#global-filter-container > div > button,
+div#global-filter-container>div>button,
 button.resize-reset {
     background-color: #7680f5;
     border-radius: 5px;
@@ -22,12 +22,12 @@ table {
     box-shadow: 1px 1px 2px gray;
 }
 
-table > tbody > tr:nth-child(even){
+table>tbody>tr:nth-child(even) {
     background-color: rgb(241, 241, 241);
 }
 
 /* Align header items to be center */
-thead > tr > th {
+thead>tr>th {
     text-align: center;
     /* min-width: 120px; */
 }
@@ -35,15 +35,15 @@ thead > tr > th {
 /* General search selector width is increased
     There needs to be a way to allow the search to be visible while scrollingX
 */
-tr > th > span > input {
+tr>th>span>input {
     width: 20%;
 }
 
 /* Provides styling for react-table inputs */
-thead > tr > th > div > input,
-thead > tr > th > div > div > input,
-tr > th > span > input,
-th > div > select {
+thead>tr>th>div>input,
+thead>tr>th>div>div>input,
+tr>th>span>input,
+th>div>select {
     border: 1px solid lightgray !important;
     box-shadow: 1px 1px gray;
     border-radius: 5px;
@@ -57,13 +57,14 @@ div.pagination {
     margin: 5px;
 }
 
-div.pagination > button:disabled {
+div.pagination>button:disabled {
     /* margin: 0px 0px 0px 5px; */
     border: 1px solid gray;
     border-radius: 3px;
     margin: 0px 1px;
 }
-div.pagination > button:enabled {
+
+div.pagination>button:enabled {
     /* margin: 0px 0px 0px 5px; */
     border: 1px solid gray;
     background-color: #1976d2;
@@ -90,14 +91,14 @@ span.page {
     margin: 2px;
 }
 
-span.page > strong,
-span.page-index > input,
+span.page>strong,
+span.page-index>input,
 span.page-info {
     margin-left: 5px;
     margin-right: 2px;
 }
 
-span.page-index > input {
+span.page-index>input {
     border: 1px solid lightgray;
     border-radius: 15px;
     text-align: center;
@@ -105,12 +106,12 @@ span.page-index > input {
 }
 
 /* Applies to the top header only */
-thead > tr.header-group.filter:first-child > th {
+thead>tr.header-group.filter:first-child>th {
     min-height: 115px;
 }
-thead > tr.header-group:first-child > th,
-thead > tr.header-group.filter:first-child > th
- {
+
+thead>tr.header-group:first-child>th,
+thead>tr.header-group.filter:first-child>th {
     /* display: grid;
     align-items: center; 
     justify-content: center; */
@@ -145,38 +146,41 @@ thead > tr.header-group.filter:first-child > th
     background: #555;
 }
 
-div.column-filter > input {
+div.column-filter>input {
     min-width: 100px;
 }
 
 /* Center Placeholder Text of Column Filters */
-div.column-filter > input::-webkit-input-placeholder, 
-div.column-filter > select::-webkit-input-placeholder {
+div.column-filter>input::-webkit-input-placeholder,
+div.column-filter>select::-webkit-input-placeholder {
     text-align: center !important;
- }
- 
-div.column-filter > input:-moz-placeholder, 
-div.column-filter > select:-moz-placeholder { /* Firefox 18- */
-    text-align: center !important;  
- }
- 
-div.column-filter > input::-moz-placeholder, 
-div.column-filter > select::-moz-placeholder {  /* Firefox 19+ */
-    text-align: center !important;  
- }
- 
-div.column-filter > input:-ms-input-placeholder, 
-div.column-filter > select:-ms-input-placeholder {  
-    text-align: center !important; 
- }
+}
 
-div.css-2b097c-container,  div.css-5duvv3-control {
-     min-width: 200px;
-     max-height: 44px;
-     align-content: center;
- }
+div.column-filter>input:-moz-placeholder,
+div.column-filter>select:-moz-placeholder {
+    /* Firefox 18- */
+    text-align: center !important;
+}
 
- /* Attempted styles to get the Selector to overflow the table */
+div.column-filter>input::-moz-placeholder,
+div.column-filter>select::-moz-placeholder {
+    /* Firefox 19+ */
+    text-align: center !important;
+}
+
+div.column-filter>input:-ms-input-placeholder,
+div.column-filter>select:-ms-input-placeholder {
+    text-align: center !important;
+}
+
+div.css-2b097c-container,
+div.css-5duvv3-control {
+    min-width: 200px;
+    max-height: 44px;
+    align-content: center;
+}
+
+/* Attempted styles to get the Selector to overflow the table */
 div.css-2613qy-menu {
     position: fixed;
     z-index: 1005;
@@ -187,7 +191,7 @@ table {
     border: none !important;
 }
 
-table > thead {
+table>thead {
     background-color: #1976d2;
 }
 
@@ -256,4 +260,6 @@ td.stickiest {
 .hidden {
     display: 'none';
     width: '0px';
-};
+}
+
+;

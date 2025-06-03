@@ -16,11 +16,11 @@ import {
 } from 'reactstrap'
 
 import {
-    AvForm, 
-    AvField, 
-    AvGroup, 
-    AvInput, 
-    AvFeedback, 
+    AvForm,
+    AvField,
+    AvGroup,
+    AvInput,
+    AvFeedback,
     // AvRadioGroup, 
     // AvRadio, 
     // AvCheckboxGroup, 
@@ -36,160 +36,170 @@ function PetEditModal({
     close,
     update,
 }) {
+    const [id, setId] = useState("");
     const [petName, setPetName] = useState("");
-    // const [client_id, setClient_id] = useState("");
     const [breed, setBreed] = useState("");
     const [age, setAge] = useState("");
     const [gender, setGender] = useState("");
     const [allergies, setAllergies] = useState("");
     const [medicalCondition, setMedicalCondition] = useState("");
+    const [clientId, setClientId] = useState("");
 
-    
+
 
 
 
     useEffect(() => {
-       if (data){
-        setPetName(data.petName)
-        setAge(data.age)
-        setGender(data.gender)
-        setAllergies(data.allergies)
-        setMedicalCondition(data.medicalCondition)
-       }
+        if (data) {
+            setId(data._id);
+            setPetName(data.pet_name);
+            setBreed(data.breed);
+            setAge(data.age);
+            setGender(data.gender);
+            setAllergies(data.allergies || "");
+            setMedicalCondition(data.medical_condition || "");
+            setClientId(data.client_id?._id || data.client_id || "");
+        }
     }, [data]);
 
 
-    const handleSubmit = (event, errors, value) => {
-        if (errors.length === 0){
-            var today = new Date(), day, month;
-            if (today.getDate() <= 9){
-                day = "0" + today.getDate();
-            } else{
-                day = today.getDate();
-            }
-           
-            if (today.getMonth() <= 9){
-                month = "0" + (today.getMonth() + 1);
-            } else{
-                month = today.getMonth() + 1;
-            }
-
-            var date = today.getFullYear() + '-' + (month) + '-' + day;
-            console.log("Current Date: ", date)
-            value['joined_date'] = date;
-            value['status'] = 'active';
-            console.log("value: ", value);
-            update(value);
+    const handleSubmit = (event, errors, values) => {
+        console.log("Form submission - errors:", errors);
+        if (errors.length === 0) {
+            const petData = {
+                id: id,
+                pet_name: petName,
+                breed: breed,
+                age: parseInt(age) || age,
+                gender: gender,
+                allergies: allergies || "",
+                medical_condition: medicalCondition || "",
+                ...(clientId && { client_id: clientId }),
+                status: data.status || true
+            };
+            console.log("Submitting pet data:", petData);
+            update(petData);
         }
     }
 
     return (
         <div>
-            <Modal isOpen={isEditOpen} size={'xl'} backdrop={'static'} style={{overflow:'hidden'}} centered={true} keyboard={false}>
+            <Modal isOpen={isEditOpen} size={'xl'} backdrop={'static'} style={{ overflow: 'hidden' }} centered={true} keyboard={false}>
                 <ModalHeader className='bg-primary text-white'>
                     Update Pet
                 </ModalHeader>
                 <ModalBody>
-                <AvForm className='p-4' onSubmit={handleSubmit}>
-                    <Row>
-                        <Col>
-                        
-                                </Col>
-                            </Row>
-                            <Row>
+                    <AvForm className='p-4' onSubmit={handleSubmit}>
+                        <Row>
                             <Col>
-                            <AvGroup>
-                                <Label for="pet_name">
-                                Pet Name
-                                </Label>
-                                <AvInput 
-                                    id="pet_name"
-                                    value={petName}
-                                    onChange={( event ) => setPetName(event.target.value)}
-                                    name="pet_name"
-                                    placeholder="Required"
-                                    type="text"
-                                    required
-                                />
-                                <AvFeedback>Field is Required!</AvFeedback>
-                            </AvGroup>
-                    </Col>
-                        <Col>
-                            <AvGroup>
-                                <AvField id="breed" name="breed" label="Breed" type="email" placeholder="Required" value={breed} onChange={( event ) => setBreed(event.target.value)} required />
-                                <AvFeedback>Field is Required!</AvFeedback>
-                            </AvGroup>
-                        </Col>
+
+                            </Col>
                         </Row>
-                    <Row>
-                        <Col>
-                            <AvGroup>
-                                <Label for="age">
-                                Age
-                                </Label>
-                                <AvInput 
-                                    id="age"
-                                    value={age}
-                                    onChange={( event ) => setAge(event.target.value)}
-                                    name="age"
-                                    placeholder="Required"
-                                    type="text"
-                                    required
-                                />
-                                <AvFeedback>Field is Required!</AvFeedback>
-                            </AvGroup>
-                        </Col>
-                        <Col>
-                            <AvGroup>
-                                <Label for="gender">
-                                Gender
-                                </Label>
-                                <AvInput 
-                                    id="gender"
-                                    value={gender}
-                                    onChange={( event ) => setGender(event.target.value)}
-                                    name="gender"
-                                    placeholder="Required"
-                                    type="text"
-                                    required
-                                />
-                                <AvFeedback>Field is Required!</AvFeedback>
-                            </AvGroup>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <AvGroup>
-                                <Label for="allergies">
-                                Allergies
-                                </Label>
-                                <AvInput 
-                                    id="allergies"
-                                    value={allergies}
-                                    onChange={( event ) => setAllergies(event.target.value)}
-                                    name="allergies"
-                                    placeholder="Optional"
-                                    type="text"
-                                />
-                            </AvGroup>
-                        </Col>
-                        <Col>
-                            <AvGroup>
-                                <Label for="medical_condition">
-                                Medical Condition
-                                </Label>
-                                <AvInput 
-                                    id="medical_condition"
-                                    value={medicalCondition}
-                                    onChange={( event ) => setMedicalCondition(event.target.value)}
-                                    name="medical_condition"
-                                    placeholder="Optional"
-                                    type="text"
-                                />
-                            </AvGroup>
-                        </Col>
-                    </Row>
-                       
+                        <Row>
+                            <Col>
+                                <AvGroup>
+                                    <Label for="pet_name">
+                                        Pet Name
+                                    </Label>
+                                    <AvInput
+                                        id="pet_name"
+                                        value={petName}
+                                        onChange={(event) => setPetName(event.target.value)}
+                                        name="pet_name"
+                                        placeholder="Required"
+                                        type="text"
+                                        required
+                                    />
+                                    <AvFeedback>Field is Required!</AvFeedback>
+                                </AvGroup>
+                            </Col>
+                            <Col>
+                                <AvGroup>
+                                    <Label for="breed">
+                                        Breed
+                                    </Label>
+                                    <AvInput
+                                        id="breed"
+                                        name="breed"
+                                        value={breed}
+                                        onChange={(event) => setBreed(event.target.value)}
+                                        placeholder="Required"
+                                        type="text"
+                                        required
+                                    />
+                                    <AvFeedback>Field is Required!</AvFeedback>
+                                </AvGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <AvGroup>
+                                    <Label for="age">
+                                        Age
+                                    </Label>
+                                    <AvInput
+                                        id="age"
+                                        value={age}
+                                        onChange={(event) => setAge(event.target.value)}
+                                        name="age"
+                                        placeholder="Required"
+                                        type="text"
+                                        required
+                                    />
+                                    <AvFeedback>Field is Required!</AvFeedback>
+                                </AvGroup>
+                            </Col>
+                            <Col>
+                                <AvGroup>
+                                    <Label for="gender">
+                                        Gender
+                                    </Label>
+                                    <AvInput
+                                        id="gender"
+                                        value={gender}
+                                        onChange={(event) => setGender(event.target.value)}
+                                        name="gender"
+                                        placeholder="Required"
+                                        type="text"
+                                        required
+                                    />
+                                    <AvFeedback>Field is Required!</AvFeedback>
+                                </AvGroup>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <AvGroup>
+                                    <Label for="allergies">
+                                        Allergies
+                                    </Label>
+                                    <AvInput
+                                        id="allergies"
+                                        value={allergies}
+                                        onChange={(event) => setAllergies(event.target.value)}
+                                        name="allergies"
+                                        placeholder="Optional"
+                                        type="text"
+                                    />
+                                </AvGroup>
+                            </Col>
+                            <Col>
+                                <AvGroup>
+                                    <Label for="medical_condition">
+                                        Medical Condition
+                                    </Label>
+                                    <AvInput
+                                        id="medical_condition"
+                                        value={medicalCondition}
+                                        onChange={(event) => setMedicalCondition(event.target.value)}
+                                        name="medical_condition"
+                                        placeholder="Optional"
+                                        type="text"
+                                    />
+                                </AvGroup>
+                            </Col>
+                        </Row>
+
                         <FormGroup className='d-flex flex-row justify-content-center mt-4'>
                             <Button className="border-primary bg-primary text-white">Submit</Button>
                         </FormGroup>

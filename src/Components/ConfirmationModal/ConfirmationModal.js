@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React } from 'react'
 import {
     Modal,
     ModalHeader,
@@ -14,59 +14,78 @@ import {
     Row,
 } from 'reactstrap'
 
+function ConfirmationModal({
+    isConfirmationOpen,
+    close,
+    onConfirm,
+    data,
+    action = 'Deletion',
+    tableType = 'Appointments'
+}) {
+    console.log("ConfirmationModal props:", { isConfirmationOpen, action, tableType, data });
 
-function ConfirmationModal(props) {
-
-    const [rowData, setRowData] = useState('');
-    const [tableType, setTableType] = useState('');
-    const [operation, setOperation] = useState('');
-    const [actionType, setActionType] = useState('');
-
-    useEffect(() => {
-        setRowData(props.data["data"]);
-        setTableType(props.tableType);
-        setOperation(props.action);
-        if(props.action === "Deletion"){
-            setActionType("delete");
-        }else if(props.action === "Deactivation"){
-            setActionType('deactivate');
-        }else{
-            setActionType('reactivate');
+    const handleConfirm = async () => {
+        console.log("Handling confirmation with data:", data);
+        if (data && data.id) {
+            await onConfirm(data.id);
+            close();
         }
-
-    }, [props.isConfirmationOpen, props.action, props.tableType, props.data]);
-
-
-
-    const submitHandler = () => {
-        console.log("reacehd the submit handler for the confirmation modal");
-        if(operation === "Deletion"){
-            props.delete(props.data["id"]);
-        }else if(props.action === "Deactivation"){
-            props.deactivate(props.data["id"]);
-        }else if(props.action === "Reactivation"){
-            props.reactivate(props.data["id"]);
-        }
-    }
+    };
 
     return (
-        <Modal isOpen={props.isConfirmationOpen} size={'md'} backdrop={'static'} style={{overflow:'hidden'}} centered={true} keyboard={false}>
-            <ModalHeader className='bg-warning text-white'>
-                Confirm {operation}
+        <Modal isOpen={isConfirmationOpen} size={'md'} backdrop={'static'} style={{ overflow: 'hidden' }} centered={true} keyboard={false}>
+            <ModalHeader className='text-white' style={{ backgroundColor: '#e74c3c', borderBottom: 'none' }}>
+                Confirm {action}
             </ModalHeader>
-            <ModalBody>
-                <Form className='p-4'>
+            <ModalBody style={{ padding: '24px' }}>
+                <Form>
                     <Row>
                         <Col>
-                            <p className='text-center'>Are you sure you want to {actionType} {rowData} from the {tableType} list?</p>
+                            <h5 style={{ color: '#2c3e50', marginBottom: '16px' }}>
+                                Are you sure you want to proceed with the {action} of {data.data}?
+                            </h5>
+                            {data.message && (
+                                <div className="alert alert-warning" style={{
+                                    backgroundColor: '#fff3cd',
+                                    color: '#856404',
+                                    border: 'none',
+                                    borderRadius: '8px',
+                                    padding: '16px'
+                                }}>
+                                    {data.message}
+                                </div>
+                            )}
                         </Col>
                     </Row>
                 </Form>
             </ModalBody>
-            <ModalFooter>
-                <div className='w-100 d-flex flex-row justify-content-around'>
-                    <Button onClick={() => submitHandler()} className="btn btn-warning text-white">Yes</Button>
-                    <Button onClick={props.close} className="btn btn-secondary text-white">No</Button>
+            <ModalFooter style={{
+                borderTop: '1px solid #eee',
+                padding: '16px 24px'
+            }}>
+                <div className='w-100 d-flex justify-content-end gap-2'>
+                    <Button
+                        onClick={handleConfirm}
+                        style={{
+                            backgroundColor: '#e74c3c',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '8px 24px'
+                        }}
+                    >
+                        Confirm
+                    </Button>
+                    <Button
+                        onClick={close}
+                        style={{
+                            backgroundColor: '#95a5a6',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '8px 24px'
+                        }}
+                    >
+                        Cancel
+                    </Button>
                 </div>
             </ModalFooter>
         </Modal>
